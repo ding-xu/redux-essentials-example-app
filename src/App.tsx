@@ -5,6 +5,8 @@ import { ToastContainer } from 'react-tiny-toast'
 import { Navbar } from './components/Navbar'
 import PostsList from './view/PostsList'
 import AddPostForm from './view/AddPostForm'
+import PostDetail from './view/PostDetail'
+import EditPostForm from './view/EditPostForm'
 
 function App() {
   return (
@@ -21,6 +23,9 @@ function App() {
               </React.Fragment>
             }
           ></Route>
+          <Route path="/posts/:postId" element={<PostDetail />} />
+          <Route path="/editPost/:postId" element={<EditPostForm />} />
+          <Route path="*" element={<h2>Page not found</h2>} />
         </Routes>
       </div>
       <ToastContainer></ToastContainer>

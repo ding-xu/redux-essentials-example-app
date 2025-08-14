@@ -1,13 +1,18 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-// import { nanoid } from '@reduxjs/toolkit'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'react-tiny-toast'
-import { addPost } from '../redux/posts'
+import { updatePost } from '../redux/posts'
 
-export default function AddPostForm() {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+export default function EditPostForm() {
+  const { postId } = useParams()
+  const post = useSelector((state: any) => state.posts.find((post: any) => post.id === postId))
+
+  const [title, setTitle] = useState(post ? post.title : '')
+  const [content, setContent] = useState(post ? post.content : '')
+
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value)
@@ -18,16 +23,16 @@ export default function AddPostForm() {
   function handleSubmit(e: React.FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     if (title && content) {
-      // dispatch(
-      //   addPost({
-      //     id: nanoid(),
-      //     title,
-      //     content,
-      //   }),
-      // )
-      dispatch(addPost(title, content))
+      dispatch(
+        updatePost({
+          id: postId,
+          title,
+          content,
+        }),
+      )
       setTitle('')
       setContent('')
+      navigate(`/posts/${postId}`)
     } else {
       toast.show('Please fill in both fields', {
         variant: 'warning',
@@ -38,7 +43,7 @@ export default function AddPostForm() {
 
   return (
     <section>
-      <h2>Add a New Post</h2>
+      <h2>Edit Post</h2>
       <form>
         <label htmlFor="postTitle">Post Title:</label>
         <input id="postTitle" name="postTitle" type="text" value={title} onChange={handleTitleChange} />
