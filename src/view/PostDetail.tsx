@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import PostAuthor from './PostAuthor'
 import TimeAgo from './TimeAgo'
+import ReactionButtons from './ReactionButtons'
 
 export default function PostDetail() {
   const { postId } = useParams<{ postId: string }>()
@@ -28,6 +29,7 @@ export default function PostDetail() {
       <Link to={`/editPost/${postId}`} className="button">
         Edit Post
       </Link>
+      <ReactionButtons post={post} />
     </section>
   )
 }
