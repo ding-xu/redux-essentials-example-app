@@ -13,12 +13,14 @@ export const postsSlice = createSlice({
       reducer: (state, action) => {
         state.push(action.payload)
       },
-      prepare: (title: string, content: string) => {
+      prepare: (title: string, content: string, userId: string) => {
         return {
           payload: {
             id: nanoid(),
             title,
             content,
+            user: userId,
+            // date: new Date().toISOString(),
           },
           meta: {
             timestamp: new Date().getTime(),

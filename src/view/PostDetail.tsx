@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import PostAuthor from './PostAuthor'
 
 export default function PostDetail() {
   const { postId } = useParams<{ postId: string }>()
@@ -20,6 +21,7 @@ export default function PostDetail() {
       <article className="post">
         <h2>{post.title}</h2>
         <p className="post-content">{post.content}</p>
+        <PostAuthor userId={post.user} />
       </article>
       <Link to={`/editPost/${postId}`} className="button">
         Edit Post
