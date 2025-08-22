@@ -1,15 +1,14 @@
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { selectPostById } from '../redux/posts'
 import PostAuthor from './PostAuthor'
 import TimeAgo from './TimeAgo'
 import ReactionButtons from './ReactionButtons'
 
 export default function PostDetail() {
   const { postId } = useParams<{ postId: string }>()
-  const post = useSelector((state: any) => {
-    return state.posts.find((post: any) => post.id === postId)
-  })
+  const post = useSelector((state) => selectPostById(state, postId || ''))
 
   if (!post) {
     return (
@@ -22,14 +21,16 @@ export default function PostDetail() {
     <section>
       <article className="post">
         <h2>{post.title}</h2>
+        <div>
+          <PostAuthor userId={post.user} />
+          <TimeAgo timestamp={post.date} />
+        </div>
         <p className="post-content">{post.content}</p>
-        <PostAuthor userId={post.user} />
-        <TimeAgo timestamp={post.date} />
+        <ReactionButtons post={post} />
+        <Link to={`/editPost/${postId}`} className="button">
+          Edit Post
+        </Link>
       </article>
-      <Link to={`/editPost/${postId}`} className="button">
-        Edit Post
-      </Link>
-      <ReactionButtons post={post} />
     </section>
   )
 }

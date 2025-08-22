@@ -3,7 +3,7 @@ import { updateReaction } from '../redux/posts'
 
 const reactionEmoji = {
   thumbsUp: '👍',
-  hooray: '🎉',
+  tada: '🎉',
   heart: '❤️',
   rocket: '🚀',
   eyes: '👀',

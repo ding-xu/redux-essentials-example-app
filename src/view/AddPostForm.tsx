@@ -2,14 +2,18 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 // import { nanoid } from '@reduxjs/toolkit'
 import { toast } from 'react-tiny-toast'
-import { addPost } from '../redux/posts'
+import { AppDispatch } from '../redux/store'
+import { /*addPost,*/ addPostWithServer } from '../redux/posts'
 
 export default function AddPostForm() {
+  const dispatch = useDispatch<AppDispatch>()
+
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [userId, setUserId] = useState('')
+  const [requestStatus, setRequestStatus] = useState('idle')
 
-  const dispatch = useDispatch()
+  const canSave = [title, content, userId].every(Boolean) && requestStatus === 'idle'
 
   const users = useSelector((state: any) => state.users)
   const userOptions = users.map((user: any) => (
@@ -27,25 +31,45 @@ export default function AddPostForm() {
   function handleUserChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setUserId(e.target.value)
   }
-  function handleSubmit(e: React.FormEvent<HTMLButtonElement>) {
+  // function handleSubmit(e: React.FormEvent<HTMLButtonElement>) {
+  //   e.preventDefault()
+  //   if (title && content && userId) {
+  //     // dispatch(
+  //     //   addPost({
+  //     //     id: nanoid(),
+  //     //     title,
+  //     //     content,
+  //     //   }),
+  //     // )
+  //     dispatch(addPost(title, content, userId))
+  //     setTitle('')
+  //     setContent('')
+  //     setUserId('')
+  //   } else {
+  //     toast.show('Please fill in both fields', {
+  //       variant: 'warning',
+  //       position: 'top-center',
+  //     })
+  //   }
+  // }
+  async function handleSavePost(e: React.FormEvent<HTMLButtonElement>) {
     e.preventDefault()
-    if (title && content && userId) {
-      // dispatch(
-      //   addPost({
-      //     id: nanoid(),
-      //     title,
-      //     content,
-      //   }),
-      // )
-      dispatch(addPost(title, content, userId))
-      setTitle('')
-      setContent('')
-      setUserId('')
-    } else {
-      toast.show('Please fill in both fields', {
-        variant: 'warning',
-        position: 'top-center',
-      })
+    if (canSave) {
+      try {
+        setRequestStatus('loading')
+        await dispatch(addPostWithServer({ title, content, user: userId })).unwrap()
+        setTitle('')
+        setContent('')
+        setUserId('')
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        toast.show(`Failed to save the post: ${errorMessage}`, {
+          variant: 'danger',
+          position: 'top-center',
+        })
+      } finally {
+        setRequestStatus('idle')
+      }
     }
   }
 
@@ -62,7 +86,7 @@ export default function AddPostForm() {
         </select>
         <label htmlFor="postContent">Post Content:</label>
         <textarea id="postContent" name="postContent" value={content} onChange={handleContentChange} />
-        <button type="submit" onClick={handleSubmit}>
+        <button type="submit" disabled={!canSave} onClick={handleSavePost}>
           Save Post
         </button>
       </form>
