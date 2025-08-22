@@ -120,7 +120,7 @@ export const addPostWithServer = createAsyncThunk(
 
 export default postsSlice.reducer
 
-export const selectAllPosts = (state: any) => state.posts.posts
+export const selectAllPosts = (state: any): postType[] => state.posts.posts
 
-export const selectPostById = (state: any, postId: string) =>
+export const selectPostById = (state: any, postId: string): postType =>
   state.posts.posts.find((post: postType) => post.id === postId)
