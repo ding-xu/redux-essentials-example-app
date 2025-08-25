@@ -9,6 +9,7 @@ import PostDetail from './view/PostDetail'
 import EditPostForm from './view/EditPostForm'
 import UserList from './view/UserList'
 import UserPage from './view/UserPage'
+import NotificationsList from './view/NotifitionsList'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/editPost/:postId" element={<EditPostForm />} />
           <Route path="/users" element={<UserList />} />
           <Route path="/users/:userId" element={<UserPage />} />
+          <Route path="/notifications" element={<NotificationsList />} />
           <Route path="*" element={<h2>Page not found</h2>} />
         </Routes>
       </div>
