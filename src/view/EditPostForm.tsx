@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'react-tiny-toast'
+import { RootState } from '../redux/store'
 import { selectPostById, updatePost } from '../redux/posts'
 
 export default function EditPostForm() {
   const { postId } = useParams()
-  const post = useSelector((state) => selectPostById(state, postId || ''))
+  const post = useSelector((state: RootState) => selectPostById(state, postId || ''))
 
   const [title, setTitle] = useState(post ? post.title : '')
   const [content, setContent] = useState(post ? post.content : '')

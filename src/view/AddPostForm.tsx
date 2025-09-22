@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-tiny-toast'
 import { AppDispatch } from '../redux/store'
 import { /*addPost,*/ addPostWithServer } from '../redux/posts'
+import { selectAllUsers } from '../redux/users'
 
 export default function AddPostForm() {
   const dispatch = useDispatch<AppDispatch>()
@@ -15,7 +16,8 @@ export default function AddPostForm() {
 
   const canSave = [title, content, userId].every(Boolean) && requestStatus === 'idle'
 
-  const users = useSelector((state: any) => state.users)
+  // const users = useSelector((state: any) => state.users)
+  const users = useSelector(selectAllUsers)
   const userOptions = users.map((user: any) => (
     <option key={user.id} value={user.id}>
       {user.name}
