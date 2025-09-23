@@ -2,13 +2,16 @@ import { configureStore } from '@reduxjs/toolkit'
 import postsReducer from './posts'
 import usersReducer from './users'
 import notificationsReducer from './notifications'
+import { apiSlice } from './apiSlice'
 
 export const store = configureStore({
   reducer: {
     posts: postsReducer,
     users: usersReducer,
     notifications: notificationsReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>
