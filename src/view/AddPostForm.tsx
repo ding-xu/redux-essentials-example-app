@@ -1,20 +1,24 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { /*useDispatch,*/ useSelector } from 'react-redux'
 // import { nanoid } from '@reduxjs/toolkit'
 import { toast } from 'react-tiny-toast'
-import { AppDispatch } from '../redux/store'
-import { /*addPost,*/ addPostWithServer } from '../redux/posts'
+// import { AppDispatch } from '../redux/store'
+// import { /*addPost,*/ addPostWithServer } from '../redux/posts'
 import { selectAllUsers } from '../redux/users'
+import { useAddNewPostMutation } from '../redux/apiSlice'
 
 export default function AddPostForm() {
-  const dispatch = useDispatch<AppDispatch>()
+  // const dispatch = useDispatch<AppDispatch>()
 
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [userId, setUserId] = useState('')
-  const [requestStatus, setRequestStatus] = useState('idle')
+  // const [requestStatus, setRequestStatus] = useState('idle')
 
-  const canSave = [title, content, userId].every(Boolean) && requestStatus === 'idle'
+  // const canSave = [title, content, userId].every(Boolean) && requestStatus === 'idle'
+
+  const [addNewPost, { isLoading }] = useAddNewPostMutation()
+  const canSave = [title, content, userId].every(Boolean) && !isLoading
 
   // const users = useSelector((state: any) => state.users)
   const users = useSelector(selectAllUsers)
@@ -58,8 +62,9 @@ export default function AddPostForm() {
     e.preventDefault()
     if (canSave) {
       try {
-        setRequestStatus('loading')
-        await dispatch(addPostWithServer({ title, content, user: userId })).unwrap()
+        // setRequestStatus('loading')
+        // await dispatch(addPostWithServer({ title, content, user: userId })).unwrap()
+        await addNewPost({ title, content, user: userId }).unwrap()
         setTitle('')
         setContent('')
         setUserId('')
@@ -70,7 +75,7 @@ export default function AddPostForm() {
           position: 'top-center',
         })
       } finally {
-        setRequestStatus('idle')
+        // setRequestStatus('idle')
       }
     }
   }

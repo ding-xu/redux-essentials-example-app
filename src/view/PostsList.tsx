@@ -85,7 +85,7 @@ function PostExcerpt({ post }: { post: postType }) {
 }
 
 export default function PostsList() {
-  const { data: posts = [], isLoading, isSuccess, isError, error } = useGetPostsQuery(undefined)
+  const { data: posts = [], isLoading, isFetching, isSuccess, isError, error, refetch } = useGetPostsQuery(undefined)
   const sortedPosts = useMemo(() => {
     return posts.slice().sort((a: postType, b: postType) => b.date.localeCompare(a.date))
   }, [posts])
@@ -94,7 +94,9 @@ export default function PostsList() {
   if (isLoading) {
     content = <Spinner text="Loading..." />
   } else if (isSuccess) {
-    content = sortedPosts.map((post: postType) => <PostExcerpt key={post.id} post={post} />)
+    const rederedPosts = sortedPosts.map((post: postType) => <PostExcerpt key={post.id} post={post} />)
+    const containerClassName = isFetching ? 'posts-container disabled' : 'posts-container'
+    content = <div className={containerClassName}>{rederedPosts}</div>
   } else if (isError) {
     content = <div>{error.toString()}</div>
   }
@@ -102,6 +104,9 @@ export default function PostsList() {
   return (
     <section className="posts-list">
       <h2>Posts</h2>
+      <button className="button refresh-button" onClick={() => refetch()}>
+        Refresh Posts
+      </button>
       {content}
     </section>
   )
