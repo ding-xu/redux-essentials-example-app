@@ -4,7 +4,8 @@ import { Provider } from 'react-redux'
 
 import App from './App'
 import { store } from './redux/store'
-import { fetchUsers } from './redux/users'
+// import { fetchUsers } from './redux/users'
+import { extentdedApiSlice } from './redux/users'
 
 import { worker } from './api/server'
 
@@ -17,7 +18,8 @@ async function start() {
   await worker.start({ onUnhandledRequest: 'bypass' })
 
   // Fetch initial users from the mock API
-  store.dispatch(fetchUsers())
+  // store.dispatch(fetchUsers())
+  store.dispatch(extentdedApiSlice.endpoints.getUsers.initiate(undefined))
 
   const root = createRoot(document.getElementById('root')!)
 
